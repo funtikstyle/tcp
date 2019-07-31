@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	_ "flag"
 	"fmt"
 	"io"
 	"log"
@@ -15,10 +16,10 @@ import (
 //}
 
 func main() {
-	port := flag.Int("P", 80, "port connection")
+	port := flag.String("P", "80", "port connection")
+	flag.Parse()
 
-	url := ":" + string(port)
-	tcp, err := net.Listen("tcp", url)
+	tcp, err := net.Listen("tcp", ":"+*port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -49,7 +50,7 @@ func newConnect(c net.Conn) {
 			}
 			break
 		}
-		sep := strings.Split(data, " ")
+		sep := strings.Split(string(data), " ")
 		//fmt.Printf("read: %v \n", string(data))
 		base := make(map[string]string)
 
