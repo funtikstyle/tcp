@@ -56,7 +56,6 @@ func newConnect(c net.Conn) {
 		switch sep[0] {
 		case "GET":
 			fmt.Println(Base[sep[1]])
-			fmt.Println("произошло чтение")
 		case "SET":
 			Base[sep[1]] = sep[2]
 			fmt.Println(Base)
