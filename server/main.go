@@ -16,7 +16,7 @@ import (
 //}
 
 func main() {
-	port := flag.String("P", "80", "port connection")
+	port := flag.String("P", "8080", "port connection")
 	flag.Parse()
 
 	tcp, err := net.Listen("tcp", ":"+*port)
@@ -39,7 +39,7 @@ func main() {
 
 func newConnect(c net.Conn) {
 	fmt.Println("conn:\t", c.RemoteAddr())
-
+	Base := make(map[string]string)
 	r := bufio.NewReader(c)
 	for {
 		data, _, err := r.ReadLine()
@@ -52,19 +52,20 @@ func newConnect(c net.Conn) {
 		}
 		sep := strings.Split(string(data), " ")
 		//fmt.Printf("read: %v \n", string(data))
-		base := make(map[string]string)
 
 		switch sep[0] {
 		case "GET":
-			fmt.Println(base[sep[1]])
+			fmt.Println(Base[sep[1]])
+			fmt.Println("произошло чтение")
 		case "SET":
-			base[sep[1]] = sep[2]
+			Base[sep[1]] = sep[2]
+			fmt.Println(Base)
 		case "KEYS":
-			for _, key := range base {
+			for key, _ := range Base {
 				fmt.Println(key)
 			}
 		case "DEL":
-			delete(base, sep[1])
+			delete(Base, sep[1])
 		}
 	}
 

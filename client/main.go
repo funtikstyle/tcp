@@ -11,11 +11,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//_, _ = conn.Write([]byte("привет\n"))
-	//_, _ = conn.Write([]byte("привет1\n"))
-	//_, _ = conn.Write([]byte("привет2\n"))
-	//_, _ = conn.Write([]byte("привет3\n"))
-	//_, _ = conn.Write([]byte("привет4\n"))
+	_, _ = conn.Write([]byte("SET asd 1234\n"))
+	_, _ = conn.Write([]byte("SET asf 1234\n"))
+	_, _ = conn.Write([]byte("DEL asd 1234\n"))
+	_, _ = conn.Write([]byte("KEYS\n"))
+	//_, _ = conn.Write([]byte(""))
 
 	conn.Close()
 }
