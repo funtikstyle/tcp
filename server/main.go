@@ -56,15 +56,21 @@ func newConnect(c net.Conn) {
 		switch sep[0] {
 		case "GET":
 			fmt.Println(Base[sep[1]])
+			c.Write([]byte(Base[sep[1]]))
 		case "SET":
 			Base[sep[1]] = sep[2]
 			fmt.Println(Base)
+			c.Write([]byte("данные отравленны -" + sep[1] + "\n"))
 		case "KEYS":
 			for key, _ := range Base {
 				fmt.Println(key)
+				c.Write([]byte(key))
 			}
 		case "DEL":
 			delete(Base, sep[1])
+			fmt.Println("данные удалены")
+			c.Write([]byte("данные удалены по ключу - " + sep[1] + "\n"))
+
 		}
 	}
 
