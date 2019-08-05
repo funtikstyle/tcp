@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net"
-	"os"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 	_, _ = conn.Write([]byte("KEYS\n"))
 	_, _ = conn.Write([]byte("GET aaa"))
 
-	r := bufio.NewReader(os.Stdin)
+	r := bufio.NewReader(conn)
 	for {
 		text, err := r.ReadString('\n')
 		if err != nil {

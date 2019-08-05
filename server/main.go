@@ -27,19 +27,21 @@ func main() {
 
 	fmt.Println("started ...")
 
+	Base := make(map[string]string)
+
 	for {
 		conn, err := tcp.Accept()
 		if err != nil {
 			log.Println(err)
 		}
 
-		go newConnect(conn)
+		go newConnect(conn, Base)
 	}
 }
 
-func newConnect(c net.Conn) {
+func newConnect(c net.Conn, base map[string]string) {
 	fmt.Println("conn:\t", c.RemoteAddr())
-	Base := make(map[string]string)
+
 	r := bufio.NewReader(c)
 	for {
 		data, _, err := r.ReadLine()
@@ -55,19 +57,19 @@ func newConnect(c net.Conn) {
 
 		switch sep[0] {
 		case "GET":
-			fmt.Println(Base[sep[1]])
-			c.Write([]byte(Base[sep[1]]))
+			fmt.Println(base[sep[1]])
+			c.Write([]byte(base[sep[1]]))
 		case "SET":
-			Base[sep[1]] = sep[2]
-			fmt.Println(Base)
+			base[sep[1]] = sep[2]
+			fmt.Println(base)
 			c.Write([]byte("данные отравленны -" + sep[1] + "\n"))
 		case "KEYS":
-			for key, _ := range Base {
+			for key, _ := range base {
 				fmt.Println(key)
 				c.Write([]byte(key))
 			}
 		case "DEL":
-			delete(Base, sep[1])
+			delete(base, sep[1])
 			fmt.Println("данные удалены")
 			c.Write([]byte("данные удалены по ключу - " + sep[1] + "\n"))
 
