@@ -1,0 +1,5 @@
+# Project folder
+/.idea
+
+# Vendor dep
+/vendor
