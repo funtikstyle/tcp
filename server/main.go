@@ -14,6 +14,7 @@ import (
 //type Database struct {
 //	base map[string]string
 //}
+var Base = make(map[string]string)
 
 func main() {
 	port := flag.String("P", "8080", "port connection")
@@ -26,8 +27,6 @@ func main() {
 	defer tcp.Close()
 
 	fmt.Println("started ...")
-
-	Base := make(map[string]string)
 
 	for {
 		conn, err := tcp.Accept()
