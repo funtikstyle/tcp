@@ -2,22 +2,26 @@ package service
 
 import "fmt"
 
-var Base map[string]string
-
-func GET(k string) string {
-	return Base[k]
+type dbservice struct {
+	Base map[string]string
 }
 
-func SET(k string, v string) {
-	Base[k] = v
+//var Base map[string]string
+
+func (db dbservice) GET(k string) string {
+	return db.Base[k]
 }
 
-func KEYS(s string) string {
-	for key, _ := range Base {
+func (db dbservice) SET(k string, v string) {
+	db.Base[k] = v
+}
+
+func (db dbservice) KEYS(s string) string {
+	for key, _ := range db.Base {
 		return key
 	}
 }
 
-func DEL(k string) bool {
-	delete(Base, k)
+func (db dbservice) DEL(k string) bool {
+	delete(db.Base, k)
 }
