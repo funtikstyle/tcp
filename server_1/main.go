@@ -7,21 +7,16 @@ import (
 	"io"
 	"log"
 	"net"
-	"strings"
 	"tcp/domain"
+	"tcp/handler"
+	"tcp/service"
 )
 
-//var Base map[string]string
-
-type db struct {
-	srv domain.DBService
-}
-
-func NewDB(s domain.DBService) *db {
-	return &db{srv: s}
-}
-
 func main() {
+	dbService := service.NewDevice()
+	dbhandler := handler.NewDBHandler(dbService)
+	//Base := make(map[string]string)
+	//srv := service.NewDevice(Base)
 	port := flag.String("P", "8080", "port connection")
 	flag.Parse()
 
@@ -39,11 +34,11 @@ func main() {
 			log.Println(err)
 		}
 
-		go newConnect(conn)
+		go newConnect(conn, dbhandler)
 	}
 }
 
-func newConnect(c net.Conn, h domain.DBService) {
+func newConnect(c net.Conn, h domain.DBhandler) {
 	fmt.Println("conn:\t", c.RemoteAddr())
 
 	r := bufio.NewReader(c)
@@ -56,20 +51,25 @@ func newConnect(c net.Conn, h domain.DBService) {
 			}
 			break
 		}
-		sep := strings.Split(string(data), " ")
+
+		c.Write([]byte(h.Req(string(data))))
+
+		//sep := strings.Split(string(data), " ")
 		//fmt.Printf("read: %v \n", string(data))
-
-		switch sep[0] {
-		case "GET":
-			h.GET(sep[1])
-		case "SET":
-			h.SET(sep[1], sep[2])
-		case "KEYS":
-			h.KEYS()
-		case "DEL":
-			h.DEL(sep[1])
-
-		}
+		//
+		//switch sep[0] {
+		//case "GET":
+		//	c.Write([]byte(h.GET(sep[1])))
+		//	//h.GET(sep[1])
+		//case "SET":
+		//	h.SET(sep[1], sep[2])
+		//case "KEYS":
+		//	c.Write([]byte(h.KEYS()))
+		//	//h.KEYS()
+		//case "DEL":
+		//	h.DEL(sep[1])
+		//
+		//}
 	}
 
 	fmt.Println("closed:\t", c.RemoteAddr())
